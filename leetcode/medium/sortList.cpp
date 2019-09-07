@@ -13,6 +13,9 @@
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/sort-list
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+思路：
+目前已有的方法是合并排序、快速排序，因为需要常熟级的空间复杂度，所以不能用到递归
 */
 
 #include <iostream>
@@ -24,8 +27,40 @@ struct ListNode
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
+ListNode *partition(ListNode *head, ListNode *tail)
+{
+
+    int pivot = head->val;
+    ListNode *s = head;
+    ListNode *cur = head->next;
+    while (cur != nullptr && cur != tail)
+    {
+        if (cur->val < pivot)
+        {
+            s = s->next;
+            swap(s, cur);
+        }
+        cur = cur->next;
+    }
+    swap(s, head);
+    return s;
+}
+
+void quickSort(ListNode *head, ListNode *tail)
+{
+    if (head == tail || head->next == nullptr)
+    {
+        return;
+    }
+
+    ListNode *mid = partition(head, tail);
+
+    quickSort(head, mid);
+    quickSort(mid->next, tail);
+}
 
 ListNode *sortList(ListNode *head)
 {
-    
+    quickSort(head, nullptr);
+    return head;
 }
